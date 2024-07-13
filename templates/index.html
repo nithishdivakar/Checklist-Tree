@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style type="text/css">
+        body {
+            max-width: 650px;
+            margin: auto;
+            font-family: Arial, sans-serif;
+        }
+        ul {
+            list-style-type: none;
+            padding-inline-start: 25px;
+        }
+        input.ele_checkbox {
+            margin-left: -21px;
+        }
+        .operations {
+            font-family: monospace;
+        }
+        .operations > a {
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <h3>[`':-,_.]</h3>
+        <ul>
+            <todo-item v-for="todo in topLevelTodos" :key="todo.id" :ele="todo" :elements="todos" @update="u" ></todo-item>
+        </ul>
+    </div>
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
