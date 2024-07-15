@@ -1,6 +1,6 @@
-# Checklist-Tree
+# Micro-Threads
 
-Checklist infinitly nestable (maybe) 
+ Infinitly nestable checklist. What would you use it for?
 
 To get started, do
 ```bash
@@ -8,4 +8,4 @@ python3 app.py
 ```
 
 ## Looks like this when you run it.
-<img width="719" alt="Screenshot 2024-07-13 at 4 20 02 PM" src="https://github.com/user-attachments/assets/c8b84c84-a170-4d1a-ad0b-d6b3900c448a">
+<img width="696" alt="image" src="https://github.com/user-attachments/assets/2f6dd26d-4d6e-4871-9087-bfa2cdbe3596">
