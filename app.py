@@ -2,6 +2,8 @@ from flask import Flask, jsonify, request, send_from_directory
 import json
 import os
 import time
+from datetime import datetime
+
 
 app = Flask(__name__)
 
@@ -14,6 +16,9 @@ def load_todos():
 def save_todos(todos):
     with open('todos.json', 'w') as f:
         json.dump(todos, f, indent=2)
+
+def get_formatted_timestamp():
+    return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
 @app.route('/api/todos', methods=['GET'])
 def get_todos():
@@ -30,6 +35,7 @@ def update_todo(todo_id):
     if search_results:
         search_results[0].update(request.json)
     else:
+        nw['ts'] = get_formatted_timestamp()
         todos.append(nw)
     save_todos(todos)
     return jsonify({'success': 'Todo added'}), 201

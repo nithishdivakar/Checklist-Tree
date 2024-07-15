@@ -36,7 +36,10 @@ Vue.component('item-container', {
     },
     template: `
         <div>
-            <input v-if="ele.id!=0" class="ele_checkbox" type="checkbox" v-model="ele.checked" @change="u"> {{ ele.text }}
+
+            <input v-if="ele.id!=0" class="ele_checkbox" type="checkbox" v-model="ele.checked" @change="u"> 
+            <span class="ts">({{ ele.ts }})</span>
+            {{ ele.text }}
             <span class="operations">
                 [<a href="#" @click.prevent="r">+</a><span v-if="ele.id!=0">|</span><a v-if="ele.id!=0" href="#" @click.prevent="d">-</a><span v-if="ele.id!=0">|</span><a v-if="ele.id!=0" href="#" @click.prevent="s('edit')">x</a>]
             </span>
