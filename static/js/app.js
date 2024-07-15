@@ -16,7 +16,7 @@ Vue.component('item-editor', {
 });
 
 Vue.component('item-container', {
-    props: ['ele'],
+    props: ['ele', 'children'],
     methods : {
         u() {
             console.log("item-container.u", this.ele.id);
@@ -35,14 +35,20 @@ Vue.component('item-container', {
         }
     },
     template: `
-        <div>
-
+        <div style="display:flex">
+            <div>
             <input v-if="ele.id!=0" class="ele_checkbox" type="checkbox" v-model="ele.checked" @change="u"> 
-            <span class="ts">({{ ele.ts }})</span>
-            {{ ele.text }}
-            <span class="operations">
-                [<a href="#" @click.prevent="r">+</a><span v-if="ele.id!=0">|</span><a v-if="ele.id!=0" href="#" @click.prevent="d">-</a><span v-if="ele.id!=0">|</span><a v-if="ele.id!=0" href="#" @click.prevent="s('edit')">x</a>]
-            </span>
+            </div>
+            <div style="display:flex;flex-direction:column;">
+            <!-- <span class="ts">({{ ele.ts }})</span>-->
+            <p style="margin-block-start:0;margin-block-end:0;">
+                <span v-html="ele.text"></span>
+                <span class="operations">
+                    <!--[<a href="#" @click.prevent="r">+</a><span v-if="ele.id!=0">|</span><a v-if="ele.id!=0" href="#" @click.prevent="d">-</a><span v-if="ele.id!=0">|</span><a v-if="ele.id!=0" href="#" @click.prevent="s('edit')">:</a>]-->
+                    [<a href="#" v-if="!children || !children.length" @click.prevent="r">+</a><span v-if="ele.id!=0 &&(!children || !children.length)">|</span><a v-if="ele.id!=0" href="#" @click.prevent="s('edit')">:</a>]
+                </span>
+            </p>
+            </div>
         </div>
     `
 });
@@ -76,6 +82,10 @@ Vue.component('todo-item', {
             console.log("todo-item.d",id);
             //TODO
         },
+        s(state) {this.ele.state=state;},
+        uu() {this.u(this.ele.id);},
+        rr() {this.r(this.ele.id);},
+        dd() {this.d(this.ele.id);},
         addChild(){
             const newItem = {
                 content: this.ele.state_content,
@@ -89,7 +99,7 @@ Vue.component('todo-item', {
     },
     template: `
         <li class="ele_li">
-            <item-container v-if="ele.state === '' || ele.state === 'reply' " :key="ele.id" :ele="ele" @update="u"  @add="r" @delete="d"></item-container>
+            <item-container v-if="ele.state === '' || ele.state === 'reply' " :key="ele.id" :ele="ele" :children="children" @update="u"  @add="r" @delete="d"></item-container>
             <item-editor v-if="ele.state === 'edit'" :key="ele.id" :ele="ele" @update="u"> </item-editor>
 
             <ul>            
@@ -97,6 +107,9 @@ Vue.component('todo-item', {
                     <item-editor :key="ele.id" :ele="ele" @update="u"> </item-editor>
                 </li>
                 <todo-item v-for="child in children" :key="child.id" :ele="child" :elements="elements" @update="u"></todo-item>
+                <li class="not_ele_li" v-if="!(!children || !children.length)">
+                    <span class="operations">[<a href="#" @click.prevent="rr">+</a>]</span>
+                </li>
             </ul>
         </li>
     `

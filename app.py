@@ -6,15 +6,15 @@ from datetime import datetime
 
 
 app = Flask(__name__)
-
+STORE_NAME = 'todos.json'
 def load_todos():
-    if os.path.exists('todos.json'):
-        with open('todos.json', 'r') as f:
+    if os.path.exists(STORE_NAME):
+        with open(STORE_NAME, 'r') as f:
             return json.load(f)
     return []
 
 def save_todos(todos):
-    with open('todos.json', 'w') as f:
+    with open(STORE_NAME, 'w') as f:
         json.dump(todos, f, indent=2)
 
 def get_formatted_timestamp():

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>To-Do List</title>
+    <title>[u-threads]</title>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <style type="text/css">
@@ -21,20 +21,32 @@
         }
         .operations {
             font-family: monospace;
+            color: #0088ff;
         }
         .operations > a {
             text-decoration: none;
+            color:#000;
         }
         .ts{
             color:green;
             font-family: monospace;
             font-size:small;
         }
+        .t {
+            color:green;
+            font-family: monospace;
+        }
+        .not_ele_li {
+            list-style-type: circle;
+            content: "";
+            padding-left: 0px;
+            margin-left: -1px;
+        }
     </style>
 </head>
 <body>
     <div id="app">
-        <h3>[`':-,_.]</h3>
+        <h3 class="t">[micro threads]</h3>
         <ul>
             <todo-item v-for="todo in topLevelTodos" :key="todo.id" :ele="todo" :elements="todos" @update="u" ></todo-item>
         </ul>

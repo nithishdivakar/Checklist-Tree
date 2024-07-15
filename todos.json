@@ -7,13 +7,14 @@
     "text": ""
   },
   {
-    "text": "Pellentesque at blandit odio. Suspendisse potenti. Donec tristique felis a purus scelerisque, ut sollicitudin magna interdum. Proin tincidunt commodo nulla auctor vestibulum. Nullam nibh purus, sagittis eu porta eget, facilisis sit amet erat. Phasellus imperdiet ante ut est posuere elementum. ",
+    "text": "Pellentesque at <b>blandit</b> odio. <i>Suspendisse potenti</i>. Donec tristique felis a purus scelerisque, ut sollicitudin magna interdum. Proin tincidunt commodo nulla auctor vestibulum. Nullam nibh purus, sagittis eu porta eget, facilisis sit amet erat. Phasellus imperdiet ante ut est posuere elementum. ",
     "checked": false,
     "order": 2,
     "id": 1720833190,
     "editing": false,
     "parent_id": 0,
-    "state": ""
+    "state": "edit",
+    "state_content": ""
   },
   {
     "text": "Nam sollicitudin ante ex, in rhoncus nunc bibendum et. Nulla quis purus nec elit gravida sollicitudin. Praesent bibendum volutpat volutpat. Suspendisse iaculis magna in neque fermentum, id eleifend felis lacinia. In nec volutpat lacus, convallis imperdiet mauris. Sed non auctor est. Donec vel malesuada elit. Donec dignissim in purus accumsan lacinia.",
@@ -30,7 +31,7 @@
     "order": 4,
     "id": 1720833301,
     "parent_id": 1720833190,
-    "state": "edit",
+    "state": "",
     "state_content": ""
   },
   {
@@ -53,7 +54,8 @@
     "text": "Morbi aliquet eros non elit vestibulum, at hendrerit nulla auctor. Ut ac massa sed turpis tincidunt pulvinar ut placerat sapien. Donec eget vehicula leo. Integer vestibulum nunc non pellentesque efficitur. Pellentesque suscipit eu neque quis porta.",
     "checked": true,
     "parent_id": 1720864103,
-    "state": ""
+    "state": "",
+    "state_content": ""
   },
   {
     "id": 1720864546,
