@@ -2,7 +2,7 @@ Vue.component('item-editor', {
     props: ['ele'],
     methods : {
         u() {
-            console.log("item-editor.u",this.ele.id);
+            console.log("item-editor.u", this.ele.id);
             this.$emit('update', this.ele.id);
             this.ele.state='';
         },
@@ -90,11 +90,11 @@ Vue.component('itm', {
     },
     methods: {
         u(id){
-            console.log("itm.u",id);
+            console.log("itm.u", id);
             this.$emit('update', id);
         },
         r(id){
-            console.log("itm.r",id);
+            console.log("itm.r", id);
             const new_child = {
                 id: Math.floor(Date.now() / 1000),
                 text: "",
@@ -106,7 +106,7 @@ Vue.component('itm', {
             this.elements.push(new_child);
         },
         d(id){
-            console.log("itm.d",id);
+            console.log("itm.d", id);
             this.$emit('update', id);
         },
         s(state) {this.ele.state=state;},
@@ -175,7 +175,6 @@ new Vue({
                         itm.state = '';
                         return itm;
                     });
-                    console.log(this.itms);
                 });
         },
         u(id){
