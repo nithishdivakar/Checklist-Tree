@@ -5,12 +5,22 @@ Vue.component('item-editor', {
             console.log("item-editor.u",this.ele.id);
             this.$emit('update', this.ele.id);
             this.ele.state='';
+        },
+        toggle() {
+            this.ele.state='';
         }
     },
     template: `
-        <div>
-            <textarea v-model="ele.text" style="width:100%"></textarea>
-            <a href="#" @click.prevent="u">save</a>
+        <div class="itm">
+            <div class="itm-chk">
+                <i v-if="ele.id != 0" class="chk-icon bi bi-plus-square-dotted" @click="toggle"></i>
+            </div>
+            <div class="itm-txt">
+                <textarea v-model="ele.text" class="editor_area"></textarea>
+                <br>
+                <a href="#" @click.prevent="u" class="a-button">save</a>
+                <br>
+            </div>
         </div>
     `
 });
@@ -28,26 +38,42 @@ Vue.component('item-container', {
         },
         d(){
             console.log("item-container.d", this.ele.id);
+            this.ele.archived = true;
             this.$emit('delete', this.ele.id);
+            this.$forceUpdate();
         },
         s(state) {
             this.ele.state=state;
+        },
+        has_children(){
+            return !(!this.children || !this.children.length)
+        },
+        toggleChecked() {
+            this.ele.checked = !this.ele.checked;
+            this.u();
+        },
+        markdownToHtml(description) {
+          return marked.parse(description);
         }
     },
     template: `
-        <div style="display:flex">
-            <div>
-            <input v-if="ele.id!=0" class="ele_checkbox" type="checkbox" v-model="ele.checked" @change="u"> 
+        <div class="itm">
+            <div class="itm-chk">
+                <i v-if="ele.id != 0" class="bi chk-icon" :class="{'bi-check-square-fill': ele.checked, 'bi-square': !ele.checked}" @click="toggleChecked"></i>
             </div>
-            <div style="display:flex;flex-direction:column;">
-            <!-- <span class="ts">({{ ele.ts }})</span>-->
-            <p style="margin-block-start:0;margin-block-end:0;">
-                <span v-html="ele.text"></span>
-                <span class="operations">
-                    <!--[<a href="#" @click.prevent="r">+</a><span v-if="ele.id!=0">|</span><a v-if="ele.id!=0" href="#" @click.prevent="d">-</a><span v-if="ele.id!=0">|</span><a v-if="ele.id!=0" href="#" @click.prevent="s('edit')">:</a>]-->
-                    [<a href="#" v-if="!children || !children.length" @click.prevent="r">+</a><span v-if="ele.id!=0 &&(!children || !children.length)">|</span><a v-if="ele.id!=0" href="#" @click.prevent="s('edit')">:</a>]
-                </span>
-            </p>
+            <div class="itm-txt" v-html="markdownToHtml(ele.text)"></div>
+            <div class="itm-act">
+                <div class="subline">
+                [
+                    <a href="#" v-if="!has_children()" @click.prevent="r">reply</a>
+                    <span v-if="ele.id!=0">
+                        <span v-if="!has_children()">|</span>
+                        <a href="#" @click.prevent="d">archive</a>
+                        <span>|</span>
+                        <a href="#" @click.prevent="s('edit')">edit</a>
+                    </span>
+                ]
+                </div>
             </div>
         </div>
     `
@@ -55,60 +81,65 @@ Vue.component('item-container', {
 
 
 
-Vue.component('todo-item', {
+Vue.component('itm', {
     props: ['ele', 'elements'],
     computed: {
         children() {
-            return this.elements.filter(t => t.parent_id === this.ele.id);
+            return this.elements.filter(t => t.parent_id === this.ele.id && t.archived === false);
         }
     },
     methods: {
         u(id){
-            console.log("todo-item.u",id);
+            console.log("itm.u",id);
             this.$emit('update', id);
         },
         r(id){
-            console.log("todo-item.r",id);
+            console.log("itm.r",id);
             const new_child = {
                 id: Math.floor(Date.now() / 1000),
-                text: '',
+                text: "",
                 checked: false,
                 parent_id: id,
-                state: 'edit'
+                state: "edit",
+                archived: false
             }
             this.elements.push(new_child);
         },
         d(id){
-            console.log("todo-item.d",id);
-            //TODO
+            console.log("itm.d",id);
+            this.$emit('update', id);
         },
         s(state) {this.ele.state=state;},
-        uu() {this.u(this.ele.id);},
-        rr() {this.r(this.ele.id);},
-        dd() {this.d(this.ele.id);},
-        addChild(){
-            const newItem = {
-                content: this.ele.state_content,
-                checked: false,
-                p_id: this.ele.id,
-                state: "",
-                state_content:""
-            };
-            this.$emit('add', newItem);
+        drawAdd(){
+            if (!this.children || !this.children.length){
+                // no children
+                return false;
+            }
+            if (this.children.some(child => child.state === 'edit')) {
+                // one of the children is being edited
+                return false;
+            }
+            return true;
         }
     },
     template: `
-        <li class="ele_li">
+        <li v-if="!ele.archived" v-bind:class="'ele_li ' + ele.state">
             <item-container v-if="ele.state === '' || ele.state === 'reply' " :key="ele.id" :ele="ele" :children="children" @update="u"  @add="r" @delete="d"></item-container>
             <item-editor v-if="ele.state === 'edit'" :key="ele.id" :ele="ele" @update="u"> </item-editor>
-
-            <ul>            
-                <li v-if="ele.state === 'reply'"> 
+            <ul>
+                <li v-if="ele.state === 'reply'">
                     <item-editor :key="ele.id" :ele="ele" @update="u"> </item-editor>
+                    is this needed?
                 </li>
-                <todo-item v-for="child in children" :key="child.id" :ele="child" :elements="elements" @update="u"></todo-item>
-                <li class="not_ele_li" v-if="!(!children || !children.length)">
-                    <span class="operations">[<a href="#" @click.prevent="rr">+</a>]</span>
+                <itm v-for="child in children" :key="child.id" :ele="child" :elements="elements" @update="u"></itm>
+                <li class="ele_li" v-if="drawAdd()">
+                    <div class="itm">
+                        <div class="itm-chk">
+                            <i class="chk-icon bi bi-plus-square-dotted" @click.prevent="r(ele.id)" style="cursor: pointer;"></i>
+                        </div>
+                        <div class="itm-txt">
+                        </div>
+                    </div>
                 </li>
             </ul>
         </li>
@@ -118,41 +149,47 @@ Vue.component('todo-item', {
 new Vue({
     el: '#app',
     data: {
-        todos: [],
-        newTodoText: ''
+        itms: [],
+        status_message: ''
     },
     mounted() {
-        this.getTodos();
+        this.getItms();
     },
     computed: {
-        topLevelTodos() {
-            return this.todos.filter(todo => todo.parent_id === -1);
+        topLevelItms() {
+            return this.itms.filter(itm => itm.parent_id === -1);
+        },
+        headingContent() {
+            if ( this.status_message == ''){
+                return this.itms.filter(itm => !itm.checked).length +"/" + this.itms.length;
+            }  else {
+                return this.status_message;
+            }
         }
     },
     methods: {
-        getTodos() {
-            axios.get('/api/todos')
+        getItms() {
+            axios.get('/api/itms')
                 .then(response => {
-                    this.todos = response.data.map(todo => {
-                        todo.state = '';
-                        todo.state_content = '';
-                        return todo;
+                    this.itms = response.data.map(itm => {
+                        itm.state = '';
+                        return itm;
                     });
-                });
-        },
-        c(todo){
-            axios.post('/api/todos', todo)
-                .then(response => {
-                    this.todos.push(response.data);
-                    this.newTodoText = '';
+                    console.log(this.itms);
                 });
         },
         u(id){
             console.log("app.u",id);
-            const ele = this.todos.filter(todo => todo.id === id)[0];
-            axios.put(`/api/todos/${ele.id}`, ele)
+            const ele = this.itms.filter(itm => itm.id === id)[0];
+            axios.put(`/api/itms/${ele.id}`, ele)
                 .then(response => {
                     console.log(response.data);
+
+                    this.status_message = "Updated";
+                    setTimeout(() => {
+                        this.status_message = "";
+                    }, 2000);
+
                 });
         }
     }

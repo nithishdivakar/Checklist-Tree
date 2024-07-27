@@ -6,49 +6,18 @@
     <title>[u-threads]</title>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <link rel="stylesheet" href="/static/css/app.css">
     <style type="text/css">
-        body {
-            max-width: 650px;
-            margin: auto;
-            font-family: Arial, sans-serif;
-        }
-        ul {
-            list-style-type: none;
-            padding-inline-start: 25px;
-        }
-        input.ele_checkbox {
-            margin-left: -21px;
-        }
-        .operations {
-            font-family: monospace;
-            color: #0088ff;
-        }
-        .operations > a {
-            text-decoration: none;
-            color:#000;
-        }
-        .ts{
-            color:green;
-            font-family: monospace;
-            font-size:small;
-        }
-        .t {
-            color:green;
-            font-family: monospace;
-        }
-        .not_ele_li {
-            list-style-type: circle;
-            content: "";
-            padding-left: 0px;
-            margin-left: -1px;
-        }
     </style>
 </head>
 <body>
     <div id="app">
-        <h3 class="t">[micro threads]</h3>
+        Listree ({{ headingContent }})
         <ul>
-            <todo-item v-for="todo in topLevelTodos" :key="todo.id" :ele="todo" :elements="todos" @update="u" ></todo-item>
+            <itm v-for="itm in topLevelItms" :key="itm.id" :ele="itm" :elements="itms" @update="u" ></itm>
         </ul>
     </div>
     <script src="/static/js/app.js"></script>

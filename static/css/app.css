@@ -1,0 +1,133 @@
+:root {
+    /* Configuration variables */
+    --max-width-body: 650px;
+    --margin-left-body: 50px;
+    --font-family: Arial, sans-serif;
+    --primary-color: #000; /* Primary text color */
+    --secondary-color: #0275ff; /* Secondary accent color */
+    --border-color: #dadada;
+    --background-color: #f6f6f6;
+    --transition-speed: 200ms;
+    --font-size-small: smaller;
+    --font-size-subline: 6pt;
+    --transition-ease: ease;
+}
+
+body {
+    max-width: var(--max-width-body);
+    margin-left: var(--margin-left-body);
+    margin-right: auto;
+    font-family: var(--font-family);
+    min-height:9000px;
+}
+
+ul {
+    list-style-type: none;
+    padding-inline-start: 20px;
+}
+
+.operations {
+    font-family: monospace;
+    color: var(--primary-color);
+    font-size: var(--font-size-small);
+    display: inline-block;
+}
+
+.operations a {
+    text-decoration: none;
+    color: var(--primary-color);
+}
+
+.operations:hover,
+.operations a:hover {
+    color: var(--primary-color);
+}
+
+input.ele_checkbox {
+    margin: 0;
+}
+
+.editor_area {
+    width: auto;
+    min-width: 300px;
+    border: 1px solid var(--border-color);
+    padding: 6px;
+}
+
+.subline,
+.subline * {
+    font-size: var(--font-size-subline);
+    color: #828282;
+}
+
+.itm {
+    display: grid;
+    grid-template-areas: 
+        "checkbox text"
+        "margin  text"
+        "margin subline";
+    grid-template-columns: 20px auto;
+    grid-template-rows: 20px auto auto;
+    align-items: start;
+}
+
+.itm > * {
+    vertical-align: text-top;
+}
+
+.itm-chk {
+    grid-area: checkbox;
+    justify-self: start;
+    align-self: start;
+}
+
+.itm-txt {
+    grid-area: text;
+}
+
+.item-m {
+    grid-area: margin;
+}
+
+.itm-act {
+    grid-area: subline;
+    justify-self: start;
+}
+
+.itm-txt p {
+    margin: 5px 0;
+}        
+.itm-txt p:first-child {
+            margin-top: 0; 
+        }
+.itm-txt p:last-child {
+            margin-bottom: 0; 
+}
+
+.chk-icon {
+    font-size: 14px;
+}
+
+.chk-icon.bi-check-square-fill {
+    color: var(--secondary-color);
+}
+
+.subline {
+    height: 1px;
+    font-size: 0;
+    overflow: clip;
+    transition: all var(--transition-speed) var(--transition-ease);
+    cursor: pointer;
+    /*background-color: red;
+    height: 10px;
+    margin-top:-9px;*/
+/*    visibility: hidden;*/
+}
+
+.subline:hover {
+    height: 10px;
+    font-size: var(--font-size-subline);
+/*    margin-top:0px;*/
+/*    visibility: visible;*/
+}
+

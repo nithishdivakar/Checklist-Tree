@@ -3,57 +3,81 @@ import json
 import os
 import time
 from datetime import datetime
-
+import sys
 
 app = Flask(__name__)
-STORE_NAME = 'todos.json'
-def load_todos():
+STORE_NAME = 'test.json'
+
+
+default_values = {
+    'id': '',
+    'parent_id': -1,
+    'text': '',
+    'checked': False,
+    'archived': False
+}
+
+def sanitise_itm(itm):
+    new_itm = {}
+    for key in default_values:
+        new_itm[key] = itm.get(key, default_values[key])
+    return new_itm
+
+def load_itms():
+    DATA = []
     if os.path.exists(STORE_NAME):
         with open(STORE_NAME, 'r') as f:
-            return json.load(f)
-    return []
+            DATA =  json.load(f)
+            for itm in DATA:
+                itm = sanitise_itm(itm)
+    return DATA
 
-def save_todos(todos):
+def save_itms(itms):
+    for idx in range(len(itms)):
+        itms[idx] = sanitise_itm(itms[idx])
+
     with open(STORE_NAME, 'w') as f:
-        json.dump(todos, f, indent=2)
+        json.dump(itms, f, indent=2)
 
 def get_formatted_timestamp():
     return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-@app.route('/api/todos', methods=['GET'])
-def get_todos():
-    todos = load_todos()
-    return jsonify(todos)
+@app.route('/api/itms', methods=['GET'])
+def get_itms():
+    itms = load_itms()
+    return jsonify(itms)
 
-@app.route('/api/todos/<int:todo_id>', methods=['PUT'])
-def update_todo(todo_id):
-    print(todo_id)
-    todos = load_todos()
+@app.route('/api/itms/<int:itm_id>', methods=['PUT'])
+def update_itm(itm_id):
+    itms = load_itms()
     nw = request.json
-    
-    search_results = [ele for ele in todos if ele['id'] == nw['id']]
+    print(itm_id, nw)
+    search_results = [ele for ele in itms if ele['id'] == nw['id']]
     if search_results:
-        search_results[0].update(request.json)
+        search_results[0].update(nw)
     else:
-        nw['ts'] = get_formatted_timestamp()
-        todos.append(nw)
-    save_todos(todos)
-    return jsonify({'success': 'Todo added'}), 201
+        itms.append(nw)
+    save_itms(itms)
+    return jsonify({'success': 'Added','itm': nw}), 201
 
-@app.route('/api/todos/<int:todo_id>', methods=['DELETE'])
-def delete_todo(todo_id):
-    todos = load_todos()
-    todos = [todo for todo in todos if todo['id'] != todo_id]
-    save_todos(todos)
-    return jsonify({'result': 'Todo deleted'})
+@app.route('/api/itms/<int:itm_id>', methods=['DELETE'])
+def delete_itm(itm_id):
+    itms = load_itms()
+    itms = [itm for itm in itms if itm['id'] != itm_id]
+    save_itms(itms)
+    return jsonify({'result': 'itm deleted'})
 
 @app.route('/')
 def index():
     return send_from_directory('templates', 'index.html')
+
+@app.route('/test')
+def test():
+    return send_from_directory('templates', 'test.html')
 
 @app.route('/static/<path:path>')
 def send_static(path):
     return send_from_directory('static', path)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port=sys.argv[1])
