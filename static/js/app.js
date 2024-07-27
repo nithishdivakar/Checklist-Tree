@@ -161,7 +161,7 @@ new Vue({
         },
         headingContent() {
             if ( this.status_message == ''){
-                return this.itms.filter(itm => !itm.checked).length +"/" + this.itms.length;
+                return this.itms.filter(itm => itm.checked).length +"/" + this.itms.length;
             }  else {
                 return this.status_message;
             }
